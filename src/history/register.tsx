@@ -34,8 +34,10 @@ export function currentScope(): UndoScope | null {
 }
 
 registerCommands([
-  { id: 'edit.undo', title: 'Undo', category: 'Edit', shortcut: 'Mod+Z', run: async () => { const s = currentScope(); if (s?.canUndo()) await s.undo(); else toast('Nothing to undo'); } },
-  { id: 'edit.redo', title: 'Redo', category: 'Edit', shortcut: ['Mod+Shift+Z', 'Mod+Y'], run: async () => { const s = currentScope(); if (s?.canRedo()) await s.redo(); else toast('Nothing to redo'); } },
+  // Stack scopes serialise undo/redo internally, so rapid key presses are queued rather than checked against
+  // a cursor that may still be mid-update.
+  { id: 'edit.undo', title: 'Undo', category: 'Edit', shortcut: 'Mod+Z', run: async () => { const s = currentScope(); if (s?.stack || s?.canUndo()) await s.undo(); else toast('Nothing to undo'); } },
+  { id: 'edit.redo', title: 'Redo', category: 'Edit', shortcut: ['Mod+Shift+Z', 'Mod+Y'], run: async () => { const s = currentScope(); if (s?.stack || s?.canRedo()) await s.redo(); else toast('Nothing to redo'); } },
 ]);
 
 const KIND_ICON: Record<NonNullable<HistoryCommand['kind']>, typeof Brush> = {
