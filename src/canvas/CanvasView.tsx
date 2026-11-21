@@ -26,7 +26,9 @@ export interface CanvasPlugin {
   onKeyDown?(ctx: PluginContext, e: React.KeyboardEvent): boolean;
   /** Called with every committed pen stroke before it's saved; may transform/replace it (return null to cancel). */
   transformStroke?(ctx: PluginContext, stroke: Stroke): Stroke | null;
-  /** Live pen sample hook (QuickShape hold detection). Return true to finish the stroke immediately. */
+  /** Pen held still for ~550 ms during a stroke (QuickShape). Return true when the stroke was converted (it is then discarded). */
+  onPenHold?(ctx: PluginContext, points: number[], style: { color: string; width: number; tool: string }): boolean;
+  /** Live pen sample hook. Return true to finish the stroke immediately. */
   onPenSample?(ctx: PluginContext, points: number[], now: number): boolean | void;
   /** Files dropped on the canvas that aren't images (PDFs, audio). Return true when handled. */
   onDropFiles?(ctx: PluginContext, files: File[], world: Vec): boolean;
@@ -94,6 +96,24 @@ function CanvasSurface({ doc, active, compact }: { doc: CanvasDoc; active: boole
   const pointers = useRef(new Map<number, Vec>());
   const pinch = useRef<{ dist: number; mid: Vec } | null>(null);
   const laser = useRef<{ x: number; y: number; t: number }[]>([]);
+  const holdTimer = useRef<number | undefined>(undefined);
+  const holdAnchor = useRef<Vec | null>(null);
+  const armHold = () => {
+    window.clearTimeout(holdTimer.current);
+    holdTimer.current = window.setTimeout(() => {
+      const m = mode.current;
+      if (m.kind !== 'draw' || m.points.length < 16) return;
+      const t = useCanvasTools.getState();
+      const style = { color: m.tool === 'highlighter' ? t.hlColor : t.penColor, width: m.tool === 'highlighter' ? t.hlWidth : t.penWidth, tool: m.tool };
+      for (const p of plugins) {
+        if (p.onPenHold?.(pluginCtx, m.points, style)) {
+          setMode({ kind: 'none' });
+          renderLive();
+          return;
+        }
+      }
+    }, 550);
+  };
   const lastPointer = useRef<Vec>({ x: 0, y: 0 });
   const colorsRef = useRef(readThemeColors());
   const scopeId = `canvas:${doc.pageId}`;
@@ -290,6 +310,8 @@ function CanvasSurface({ doc, active, compact }: { doc: CanvasDoc; active: boole
       const pressure = e.pointerType === 'pen' ? e.pressure : 0.5;
       setMode({ kind: 'draw', points: [w.x, w.y, pressure, 0], tool });
       (mode.current as { t0?: number }).t0 = performance.now();
+      holdAnchor.current = screenPt(e);
+      armHold();
       return;
     }
     if (tool === 'eraser') {
@@ -396,6 +418,7 @@ function CanvasSurface({ doc, active, compact }: { doc: CanvasDoc; active: boole
           const pr = ev.pointerType === 'pen' ? ev.pressure : 0.5;
           m.points.push(q.x, q.y, pr, performance.now() - t0);
         }
+        if (!holdAnchor.current || Math.hypot(sp.x - holdAnchor.current.x, sp.y - holdAnchor.current.y) > 3) { holdAnchor.current = sp; armHold(); }
         let finish = false;
         for (const p of plugins) if (p.onPenSample?.(pluginCtx, m.points, performance.now())) finish = true;
         renderLive();
@@ -454,6 +477,7 @@ function CanvasSurface({ doc, active, compact }: { doc: CanvasDoc; active: boole
   };
 
   const endDraw = async () => {
+    window.clearTimeout(holdTimer.current);
     const m = mode.current;
     if (m.kind !== 'draw') return;
     setMode({ kind: 'none' });

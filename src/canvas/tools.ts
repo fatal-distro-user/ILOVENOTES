@@ -18,6 +18,8 @@ export interface CanvasToolState {
   smoothing: number;
   snapToGrid: boolean;
   smartGuides: boolean;
+  /** hold the pen still at the end of a stroke to snap to a shape */
+  quickShape: boolean;
   setTool(t: CanvasTool): void;
   set(p: Partial<Omit<CanvasToolState, 'set' | 'setTool'>>): void;
 }
@@ -31,7 +33,7 @@ export const useCanvasTools = create<CanvasToolState>()(
       eraserSize: 16,
       strokeColor: '#7c5cff', fillColor: 'transparent', strokeWidth: 2,
       smoothing: 0.4,
-      snapToGrid: false, smartGuides: true,
+      snapToGrid: false, smartGuides: true, quickShape: true,
       setTool: (tool) => set({ tool }),
       set: (p) => set(p),
     }),

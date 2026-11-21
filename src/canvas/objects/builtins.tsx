@@ -6,7 +6,7 @@ const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const str = (v: unknown, d = '') => (typeof v === 'string' ? v : d);
 const num = (v: unknown, d: number) => (typeof v === 'number' && Number.isFinite(v) ? v : d);
 
-export type ShapeKind = 'rect' | 'ellipse' | 'diamond' | 'triangle' | 'line' | 'arrow';
+export type ShapeKind = 'rect' | 'ellipse' | 'diamond' | 'triangle' | 'line' | 'arrow' | 'polygon' | 'polyline';
 
 /** SVG path data for a shape inside a w×h box (world units). */
 export function shapePath(kind: ShapeKind, w: number, h: number, radius = 0, d: Record<string, unknown> = {}): string {
@@ -23,6 +23,12 @@ export function shapePath(kind: ShapeKind, w: number, h: number, radius = 0, d: 
     case 'line': case 'arrow': {
       const x1 = num(d.x1, 0) * w, y1 = num(d.y1, 0) * h, x2 = num(d.x2, 1) * w, y2 = num(d.y2, 1) * h;
       return `M${x1},${y1} L${x2},${y2}`;
+    }
+    case 'polygon': case 'polyline': {
+      // Points are normalised 0..1 within the box so the shape scales with resizes.
+      const pts = (Array.isArray(d.points) ? d.points : []) as [number, number][];
+      if (!pts.length) return '';
+      return pts.map(([u, v], i) => `${i ? 'L' : 'M'}${u * w},${v * h}`).join(' ') + (kind === 'polygon' ? ' Z' : '');
     }
   }
 }
@@ -77,7 +83,7 @@ function ShapeView({ obj, doc, editing }: ObjectViewProps) {
   const fill = str(d.fill, 'transparent');
   const dash = d.dash === 'dashed' ? `${sw * 4} ${sw * 3}` : d.dash === 'dotted' ? `0 ${sw * 2.5}` : undefined;
   const pad = sw;
-  const isLine = kind === 'line' || kind === 'arrow';
+  const isLine = kind === 'line' || kind === 'arrow' || kind === 'polyline';
   return (
     <div className="relative h-full w-full">
       <svg className="absolute overflow-visible" style={{ left: 0, top: 0 }} width={Math.max(1, obj.w)} height={Math.max(1, obj.h)}>
@@ -123,7 +129,7 @@ registerObjectType({
   toText: (o) => str(o.data.text),
   toSvg: (o) => {
     const d = o.data, kind = str(d.shape, 'rect') as ShapeKind, sw = num(d.strokeWidth, 2), stroke = str(d.stroke, '#7c5cff');
-    const isLine = kind === 'line' || kind === 'arrow';
+    const isLine = kind === 'line' || kind === 'arrow' || kind === 'polyline';
     let s = `<path d="${shapePath(kind, o.w, o.h, num(d.radius, 0), d)}" fill="${isLine ? 'none' : esc(str(d.fill, 'none'))}" stroke="${esc(stroke)}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"/>`;
     if (kind === 'arrow') s += `<path d="${arrowHead(d, o.w, o.h, 10 + sw * 2)}" fill="none" stroke="${esc(stroke)}" stroke-width="${sw}" stroke-linecap="round"/>`;
     if (str(d.text)) s += `<text x="${o.w / 2}" y="${o.h / 2}" text-anchor="middle" dominant-baseline="middle" font-size="${num(d.fontSize, 16)}" fill="${esc(str(d.textColor, '#888'))}">${esc(str(d.text))}</text>`;

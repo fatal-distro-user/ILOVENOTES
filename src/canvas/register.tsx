@@ -3,6 +3,7 @@ import { registerPageBody, type PageBodyProps } from '@/views/registry';
 import { registerCommands } from '@/commands/registry';
 import { DocumentEditor } from '@/editor/DocumentEditor';
 import { CanvasView } from './CanvasView';
+import './quickshape';
 import { useCanvasTools } from './tools';
 import { activeScope } from '@/history/scopes';
 

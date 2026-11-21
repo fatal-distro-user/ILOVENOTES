@@ -124,6 +124,7 @@ export function CanvasToolbar({ doc, compact, onInsertImages }: { doc: CanvasDoc
             <Slider label="Grid size" value={settings.gridSize} min={8} max={96} step={4} onChange={(v) => void doc.setSettings({ gridSize: v })} />
             <label className="flex items-center gap-2"><input type="checkbox" checked={t.snapToGrid} onChange={(e) => t.set({ snapToGrid: e.target.checked })} data-testid="snap-grid" /><Magnet size={13} />Snap to grid</label>
             <label className="flex items-center gap-2"><input type="checkbox" checked={t.smartGuides} onChange={(e) => t.set({ smartGuides: e.target.checked })} />Smart alignment guides</label>
+            <label className="flex items-center gap-2"><input type="checkbox" checked={t.quickShape} onChange={(e) => t.set({ quickShape: e.target.checked })} data-testid="canvas-quickshape" />QuickShape (hold pen to snap)</label>
             <div className="text-[11px] text-fg-faint">Hold Alt while dragging to disable snapping.</div>
           </div>
         </Popover>

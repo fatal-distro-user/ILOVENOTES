@@ -27,6 +27,8 @@ export interface StrokeOptions {
   lazyMouse: boolean;
   cloneSource?: { x: number; y: number } | null;
   seed?: number;
+  /** Symmetry: every dab is replicated through these point transforms (identity included). */
+  transforms?: ((p: { x: number; y: number }) => { x: number; y: number })[];
 }
 
 interface Rect { x: number; y: number; w: number; h: number }
@@ -100,6 +102,7 @@ export class BrushStroke {
 
   /** Feed a pointer sample (doc space). */
   add(p: PaintPointer): void {
+    if (this.snapped) return;
     const input = { x: p.x, y: p.y, pressure: p.pointerType === 'pen' ? p.pressure : 0, t: p.t, tiltX: p.tiltX, tiltY: p.tiltY, pointerType: p.pointerType };
     const pts = this.stab.push(input);
     this.points.push(...pts);
@@ -108,6 +111,7 @@ export class BrushStroke {
 
   /** Finish: flush stabilizer, re-render with taper-end if configured. Returns false if nothing was painted. */
   end(): boolean {
+    if (this.snapped) { if (this.buffer) giveBuffer(this.buffer); this.buffer = null; return this.o.edit.touched > 0; }
     const tail = this.stab.finish();
     this.points.push(...tail);
     if (this.brush.taperEnd > 0 && this.usesBuffer && this.points.length > 1) {
@@ -129,8 +133,37 @@ export class BrushStroke {
     this.o.edit.revert();
   }
 
-  private renderDabs(dabs: Dab[], full = false): void {
-    if (!dabs.length) return;
+  /** Replicate dabs through symmetry transforms (angles follow the mirrored direction). */
+  private expand(dabs: Dab[]): Dab[] {
+    const T = this.o.transforms;
+    if (!T || T.length <= 1) return dabs;
+    const out: Dab[] = [];
+    for (const d of dabs) for (const t of T) {
+      const q1 = t({ x: d.x, y: d.y }), q2 = t({ x: d.x + Math.cos(d.angle), y: d.y + Math.sin(d.angle) });
+      out.push({ ...d, x: q1.x, y: q1.y, angle: Math.atan2(q2.y - q1.y, q2.x - q1.x) });
+    }
+    return out;
+  }
+
+  /** Raw stabilized points recorded so far (for QuickShape recognition). */
+  get recorded(): readonly StrokePoint[] { return this.points; }
+
+  /** Replace the whole stroke with new points (QuickShape snap). Buffer modes only. */
+  replaceWithPoints(points: StrokePoint[]): void {
+    if (!this.usesBuffer || !this.buffer || !this.bctx) return;
+    this.points = points.slice();
+    this.bctx.clearRect(0, 0, this.buffer.width, this.buffer.height);
+    this.dirty = null;
+    this.wetColor = parseHex(this.o.color);
+    this.cloneOffset = null;
+    this.renderDabs(computeDabs(points, { ...this.brush, taperStart: 0, taperEnd: 0 }, this.seed), true);
+    this.snapped = true;
+  }
+  private snapped = false;
+
+  private renderDabs(raw: Dab[], full = false): void {
+    if (!raw.length) return;
+    const dabs = this.expand(raw);
     const b = this.brush;
     for (const d of dabs) {
       if (b.mode === 'smudge') this.smudgeDab(d);

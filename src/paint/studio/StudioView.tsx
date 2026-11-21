@@ -12,6 +12,7 @@ import { PaintSurface, usePaintToolsList } from './PaintSurface';
 import { usePaintStudio } from './store';
 import { paintTool } from './tools';
 import { useDocVersion } from './LayersPanel';
+import { GuidesMenu } from '../geometry/guidesUi';
 
 export function PaintStudioView({ tab, active }: TabViewProps) {
   const docId = tab.params?.docId ?? '';
@@ -59,6 +60,7 @@ function Studio({ doc, active, tabId }: { doc: PaintDocument; active: boolean; t
         <div className="h-5 w-px bg-line" />
         <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto" data-testid="tool-options">{Options ? <Options doc={doc} /> : <span className="text-fg-faint">{current?.label}</span>}</div>
         {doc.editChannel === 'mask' && <span className="rounded bg-warn/20 px-1.5 text-[11px] text-warn">Editing mask</span>}
+        <GuidesMenu doc={doc} />
         <button className="flex h-7 items-center gap-1 rounded px-2 text-fg-muted hover:bg-bg-3" onClick={() => fit?.()} title="Fit to view (Mod+0)"><Maximize2 size={13} /></button>
         <button className="flex h-7 items-center gap-1 rounded px-2 text-fg-muted hover:bg-bg-3" onClick={() => setResizeOpen(true)} title="Canvas size" data-testid="paint-resize"><Ruler size={13} />{doc.width}×{doc.height}</button>
         <button className="flex h-7 items-center gap-1 rounded px-2 text-fg-muted hover:bg-bg-3" onClick={() => void exportPng()} title="Export PNG" data-testid="paint-export-png"><Download size={13} />PNG</button>

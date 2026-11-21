@@ -122,6 +122,12 @@ export function PaintSurface({ doc, active, compact, onCameraFit }: { doc: Paint
   }, [draw]);
 
   useEffect(() => doc.subscribe(schedule), [doc, schedule]);
+  // Animate marching ants while a selection exists.
+  useEffect(() => {
+    if (!active) return;
+    const id = window.setInterval(() => { if (doc.selection) schedule(); }, 140);
+    return () => window.clearInterval(id);
+  }, [active, doc, schedule]);
   useEffect(() => { schedule(); }, [schedule, camV, studio.tool, studio.size, studio.color]);
 
   useEffect(() => {

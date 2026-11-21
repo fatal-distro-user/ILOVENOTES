@@ -20,6 +20,10 @@ import { LayersPanel } from './studio/LayersPanel';
 import { usePaintStudio } from './studio/store';
 import './studio/basicTools';
 import './brushes/tools';
+import './selection/tools';
+import './selection/commands';
+import './fill/tools';
+import './geometry/guidesUi';
 import { BrushStudioPanel } from './brushes/BrushStudio';
 
 export function openPaintStudio(docId: string, title = 'Painting', opts: { newTab?: boolean } = { newTab: true }): void {
