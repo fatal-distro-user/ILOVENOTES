@@ -13,3 +13,4 @@ import '@/history/register';
 import '@/canvas/register';
 import '@/pdf/register';
 import '@/paint/register';
+import '@/paint/color/register';

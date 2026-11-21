@@ -40,7 +40,7 @@ export interface LayoutState {
   toggleScratchpad(force?: boolean): void;
   setBottomBar(b: LayoutState['bottomBar']): void;
   /** Ensure a registered panel has a state row (called by the panel registry). */
-  ensurePanel(id: string, side: DockSide): void;
+  ensurePanel(id: string, side: DockSide, defaultOrder?: number): void;
   togglePanelCollapsed(id: string): void;
   setPanelHidden(id: string, hidden: boolean): void;
   /** Move a panel to a dock, before another panel (or to the end). */
@@ -68,9 +68,9 @@ export const useLayout = create<LayoutState>()(
       toggleZen: (f) => set((s) => { s.zen = f ?? !s.zen; }),
       toggleScratchpad: (f) => set((s) => { s.scratchpadOpen = f ?? !s.scratchpadOpen; }),
       setBottomBar: (b) => set((s) => { s.bottomBar = b; }),
-      ensurePanel: (id, side) => set((s) => {
+      ensurePanel: (id, side, defaultOrder) => set((s) => {
         if (s.panels.some((p) => p.id === id)) return;
-        const order = Math.max(0, ...s.panels.filter((p) => p.side === side).map((p) => p.order)) + 1;
+        const order = defaultOrder ?? Math.max(0, ...s.panels.filter((p) => p.side === side).map((p) => p.order)) + 1;
         s.panels.push({ id, side, collapsed: false, hidden: false, order });
       }),
       togglePanelCollapsed: (id) => set((s) => { const p = s.panels.find((x) => x.id === id); if (p) p.collapsed = !p.collapsed; }),

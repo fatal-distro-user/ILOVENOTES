@@ -26,7 +26,7 @@ let snapshot: PanelDef[] = [];
 export function registerPanel(def: PanelDef): () => void {
   panels.set(def.id, def);
   snapshot = Array.from(panels.values()).sort((a, b) => (a.defaultOrder ?? 50) - (b.defaultOrder ?? 50));
-  useLayout.getState().ensurePanel(def.id, def.defaultSide);
+  useLayout.getState().ensurePanel(def.id, def.defaultSide, def.defaultOrder);
   listeners.forEach((l) => l());
   return () => {
     panels.delete(def.id);

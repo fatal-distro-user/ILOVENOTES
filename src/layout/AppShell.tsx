@@ -53,7 +53,7 @@ export function AppShell() {
   const defs = usePanels();
   const panelRows = useLayout((s) => s.panels.length);
   // Re-create layout rows for registered panels after a layout reset.
-  useEffect(() => { for (const d of defs) useLayout.getState().ensurePanel(d.id, d.defaultSide); }, [defs, panelRows]);
+  useEffect(() => { for (const d of defs) useLayout.getState().ensurePanel(d.id, d.defaultSide, d.defaultOrder); }, [defs, panelRows]);
   const BottomBar = bottom === 'none' ? undefined : getBottomBar(bottom);
 
   const activeKey = useTabs((s) => `${s.focusedPaneId}:${s.panes.find((p) => p.id === s.focusedPaneId)?.activeTabId}`);
