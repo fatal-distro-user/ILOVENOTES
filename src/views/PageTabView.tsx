@@ -82,7 +82,9 @@ function Breadcrumb({ pageId, notebookId, paneId }: { pageId: string; notebookId
 
 function PageTabView({ tab, paneId, active }: TabViewProps) {
   const pageId = tab.pageId ?? null;
-  const node = useNode(pageId);
+  const liveNode = useNode(pageId);
+  // useLiveQuery keeps returning the previous result while a new pageId loads; never act on a stale node.
+  const node = liveNode && liveNode.id === pageId ? liveNode : undefined;
   const [title, setTitle] = useState('');
   const titleRef = useRef<HTMLInputElement>(null);
   const [iconAnchor, setIconAnchor] = useState<HTMLElement | null>(null);
@@ -92,7 +94,7 @@ function PageTabView({ tab, paneId, active }: TabViewProps) {
   useEffect(() => { if (pageId) void repo.touchOpened(pageId); }, [pageId]);
   useEffect(() => {
     if (node && document.activeElement !== titleRef.current) setTitle(node.title);
-  }, [node?.title]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [node?.id, node?.title]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (node && node.title !== tab.title && document.activeElement !== titleRef.current) useTabs.getState().renamePage(node.id, node.title); }, [node?.title]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (node === undefined && pageId) {
@@ -148,7 +150,7 @@ function PageTabView({ tab, paneId, active }: TabViewProps) {
             ref={titleRef}
             value={title}
             onChange={(e) => commitTitle(e.target.value)}
-            onBlur={() => { if (!title.trim()) commitTitle('Untitled'); }}
+            onBlur={(e) => { if (!e.currentTarget.value.trim()) commitTitle('Untitled'); }}
             onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
             placeholder="Untitled"
             aria-label="Page title"

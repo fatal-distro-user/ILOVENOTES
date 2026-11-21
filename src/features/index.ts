@@ -8,3 +8,4 @@ import '@/views/PageTabView';
 import '@/views/SearchView';
 import '@/views/TrashView';
 import '@/views/SettingsView';
+import '@/editor/register';

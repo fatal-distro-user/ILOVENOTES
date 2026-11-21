@@ -5,6 +5,7 @@ import { useTabs } from '@/store/tabs';
 import { useStatus } from '@/store/status';
 import { IconButton } from '@/ui/IconButton';
 import { DialogHost } from '@/ui/dialogs';
+import { GlobalOverlays } from './overlays';
 import { usePanels } from '@/panels/registry';
 import { DockResizer, PanelStack, PanelsMenuButton } from './Dock';
 import { Explorer } from './explorer/Explorer';
@@ -86,6 +87,7 @@ export function AppShell() {
       {zen && <ZenPill />}
       <Scratchpad />
       <DialogHost />
+      <GlobalOverlays />
       <PomodoroTicker />
     </div>
   );
