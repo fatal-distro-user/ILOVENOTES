@@ -22,3 +22,15 @@ export async function newPage(page: Page, title: string) {
   await expect(editor).toBeVisible();
   return editor;
 }
+
+/** Simulate dropping a file onto an element (Playwright cannot drive native file pickers). */
+export async function dropFile(page: Page, testId: string, path: string, name: string, type: string) {
+  const { readFileSync } = await import('node:fs');
+  const b64 = readFileSync(path).toString('base64');
+  await page.getByTestId(testId).evaluate(async (el, { b64, name, type }) => {
+    const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    const dt = new DataTransfer();
+    dt.items.add(new File([bytes], name, { type }));
+    for (const t of ['dragenter', 'dragover', 'drop']) el.dispatchEvent(new DragEvent(t, { dataTransfer: dt, bubbles: true, cancelable: true }));
+  }, { b64, name, type });
+}

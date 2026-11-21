@@ -28,6 +28,8 @@ export interface CanvasPlugin {
   transformStroke?(ctx: PluginContext, stroke: Stroke): Stroke | null;
   /** Live pen sample hook (QuickShape hold detection). Return true to finish the stroke immediately. */
   onPenSample?(ctx: PluginContext, points: number[], now: number): boolean | void;
+  /** Files dropped on the canvas that aren't images (PDFs, audio). Return true when handled. */
+  onDropFiles?(ctx: PluginContext, files: File[], world: Vec): boolean;
   /** Extra overlay rendered in screen space. */
   Overlay?: React.ComponentType<{ ctx: PluginContext }>;
 }
@@ -606,10 +608,14 @@ function CanvasSurface({ doc, active, compact }: { doc: CanvasDoc; active: boole
   };
 
   const onDrop = (e: React.DragEvent) => {
-    const files = Array.from(e.dataTransfer.files).filter((f) => f.type.startsWith('image/'));
-    if (!files.length) return;
+    const all = Array.from(e.dataTransfer.files);
+    if (!all.length) return;
     e.preventDefault();
-    void insertImages(files, worldPt(e));
+    const w = worldPt(e);
+    const images = all.filter((f) => f.type.startsWith('image/'));
+    const others = all.filter((f) => !f.type.startsWith('image/'));
+    if (images.length) void insertImages(images, w);
+    if (others.length) for (const p of plugins) if (p.onDropFiles?.(pluginCtx, others, w)) break;
   };
 
   // ───────── keyboard ─────────

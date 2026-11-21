@@ -11,3 +11,4 @@ import '@/views/SettingsView';
 import '@/editor/register';
 import '@/history/register';
 import '@/canvas/register';
+import '@/pdf/register';
