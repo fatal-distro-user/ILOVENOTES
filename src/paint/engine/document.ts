@@ -124,6 +124,15 @@ export class PaintDocument {
   version = 0;
   private compositeCache: HTMLCanvasElement | null = null;
   private compositeValid = false;
+  /** Layers hidden from the on-screen composite only (animation frames not being shown). */
+  private displayHide = new Set<string>();
+
+  setDisplayHide(ids: Iterable<string>): void {
+    const next = new Set(ids);
+    if (next.size === this.displayHide.size && [...next].every((id) => this.displayHide.has(id))) return;
+    this.displayHide = next;
+    this.invalidate();
+  }
 
   private constructor(meta: RasterDoc) { this.meta = meta; }
 
@@ -412,7 +421,7 @@ export class PaintDocument {
     if (!this.compositeValid) {
       const c = ctx2d(this.compositeCache);
       c.clearRect(0, 0, this.width, this.height);
-      this.compositeChildren(null, c, new Set(), {});
+      this.compositeChildren(null, c, this.displayHide, {});
       this.compositeValid = true;
     }
     return this.compositeCache;

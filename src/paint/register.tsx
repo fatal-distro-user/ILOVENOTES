@@ -24,6 +24,10 @@ import './selection/tools';
 import './selection/commands';
 import './fill/tools';
 import './geometry/guidesUi';
+import './filters/FiltersMenu';
+import { TimelineBar, selectFrame, useAnim } from './anim/Timeline';
+import { animSettings } from './anim/model';
+import { registerBottomBar } from '@/layout/bottomBars';
 import { BrushStudioPanel } from './brushes/BrushStudio';
 
 export function openPaintStudio(docId: string, title = 'Painting', opts: { newTab?: boolean } = { newTab: true }): void {
@@ -31,6 +35,7 @@ export function openPaintStudio(docId: string, title = 'Painting', opts: { newTa
 }
 
 registerTabView('paint', PaintStudioView);
+registerBottomBar('timeline', TimelineBar);
 const isPaint = () => activeTab()?.kind === 'paint' || !!usePaintStudio.getState().doc;
 registerPanel({ id: 'brushes', title: 'Brushes', icon: Brush, defaultSide: 'right', component: BrushStudioPanel, when: isPaint, defaultOrder: 6 });
 registerPanel({ id: 'layers', title: 'Layers', icon: Layers, defaultSide: 'right', component: LayersPanel, when: isPaint, defaultOrder: 5 });
@@ -110,5 +115,8 @@ registerCommands([
   { id: 'paint.layer.add', title: 'Paint: New layer', category: 'Paint', shortcut: 'Mod+Shift+N', when: () => !!usePaintStudio.getState().doc && activeTab()?.kind === 'paint', run: () => { usePaintStudio.getState().doc?.addLayer('raster'); } },
   { id: 'paint.layer.mergeDown', title: 'Paint: Merge layer down', category: 'Paint', shortcut: 'Mod+E', when: () => activeTab()?.kind === 'paint', run: () => { const d = usePaintStudio.getState().doc; if (d?.activeLayerId) d.mergeDown(d.activeLayerId); } },
   { id: 'paint.layer.duplicate', title: 'Paint: Duplicate layer', category: 'Paint', shortcut: 'Mod+J', when: () => activeTab()?.kind === 'paint', run: () => { const d = usePaintStudio.getState().doc; if (d?.activeLayerId) d.duplicateLayer(d.activeLayerId); } },
+  { id: 'paint.anim.prev', title: 'Animation: Previous frame', category: 'Animation', shortcut: ',', when: () => { const d = usePaintStudio.getState().doc; return activeTab()?.kind === 'paint' && !!d && animSettings(d).enabled; }, run: () => { const d = usePaintStudio.getState().doc; if (d) selectFrame(d, useAnim.getState().current - 1); } },
+  { id: 'paint.anim.next', title: 'Animation: Next frame', category: 'Animation', shortcut: '.', when: () => { const d = usePaintStudio.getState().doc; return activeTab()?.kind === 'paint' && !!d && animSettings(d).enabled; }, run: () => { const d = usePaintStudio.getState().doc; if (d) selectFrame(d, useAnim.getState().current + 1); } },
+  { id: 'paint.anim.play', title: 'Animation: Play / pause', category: 'Animation', shortcut: 'Alt+Space', when: () => { const d = usePaintStudio.getState().doc; return activeTab()?.kind === 'paint' && !!d && animSettings(d).enabled; }, run: () => useAnim.getState().set({ playing: !useAnim.getState().playing }) },
   { id: 'paint.flatten', title: 'Paint: Flatten image', category: 'Paint', when: () => activeTab()?.kind === 'paint', run: () => { usePaintStudio.getState().doc?.flatten(); } },
 ]);

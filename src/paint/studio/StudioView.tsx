@@ -13,6 +13,11 @@ import { usePaintStudio } from './store';
 import { paintTool } from './tools';
 import { useDocVersion } from './LayersPanel';
 import { GuidesMenu } from '../geometry/guidesUi';
+import { FiltersMenu, FilterDialogHost } from '../filters/FiltersMenu';
+import { toggleAnimation, selectFrame, useAnim } from '../anim/Timeline';
+import { animSettings } from '../anim/model';
+import { useLayout } from '@/store/layout';
+import { Film } from 'lucide-react';
 
 export function PaintStudioView({ tab, active }: TabViewProps) {
   const docId = tab.params?.docId ?? '';
@@ -37,6 +42,12 @@ function Studio({ doc, active, tabId }: { doc: PaintDocument; active: boolean; t
   const [resizeOpen, setResizeOpen] = useState(false);
   const [fit, setFit] = useState<(() => void) | null>(null);
   const current = paintTool(studio.tool);
+  // Restore animation view (current frame + timeline) when the painting becomes active.
+  useEffect(() => {
+    if (!active) return;
+    if (animSettings(doc).enabled) { selectFrame(doc, useAnim.getState().current); useLayout.getState().setBottomBar('timeline'); }
+    else if (useLayout.getState().bottomBar === 'timeline') useLayout.getState().setBottomBar('none');
+  }, [active, doc]);
   const Options = current?.Options;
 
   useEffect(() => {
@@ -60,6 +71,8 @@ function Studio({ doc, active, tabId }: { doc: PaintDocument; active: boolean; t
         <div className="h-5 w-px bg-line" />
         <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto" data-testid="tool-options">{Options ? <Options doc={doc} /> : <span className="text-fg-faint">{current?.label}</span>}</div>
         {doc.editChannel === 'mask' && <span className="rounded bg-warn/20 px-1.5 text-[11px] text-warn">Editing mask</span>}
+        <button className={clsx('flex h-7 items-center gap-1 rounded px-2 hover:bg-bg-3', animSettings(doc).enabled ? 'text-accent' : 'text-fg-muted')} onClick={() => toggleAnimation(doc)} title="Flipbook animation timeline" data-testid="anim-toggle"><Film size={13} />Animate</button>
+        <FiltersMenu />
         <GuidesMenu doc={doc} />
         <button className="flex h-7 items-center gap-1 rounded px-2 text-fg-muted hover:bg-bg-3" onClick={() => fit?.()} title="Fit to view (Mod+0)"><Maximize2 size={13} /></button>
         <button className="flex h-7 items-center gap-1 rounded px-2 text-fg-muted hover:bg-bg-3" onClick={() => setResizeOpen(true)} title="Canvas size" data-testid="paint-resize"><Ruler size={13} />{doc.width}×{doc.height}</button>
@@ -92,6 +105,7 @@ function Studio({ doc, active, tabId }: { doc: PaintDocument; active: boolean; t
         <div className="min-w-0 flex-1"><PaintSurface doc={doc} active={active} onCameraFit={(f) => setFit(() => f)} /></div>
       </div>
       {resizeOpen && <ResizeDialog doc={doc} onClose={() => setResizeOpen(false)} />}
+      {active && <FilterDialogHost doc={doc} />}
     </div>
   );
 }
