@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+/* Theme tokens. Every theme defines the same CSS variables; components only reference tokens. */
+@theme {
+  --color-bg: var(--iln-bg);
+  --color-bg-1: var(--iln-bg-1);
+  --color-bg-2: var(--iln-bg-2);
+  --color-bg-3: var(--iln-bg-3);
+  --color-fg: var(--iln-fg);
+  --color-fg-muted: var(--iln-fg-muted);
+  --color-fg-faint: var(--iln-fg-faint);
+  --color-line: var(--iln-line);
+  --color-accent: var(--iln-accent);
+  --color-accent-fg: var(--iln-accent-fg);
+  --color-danger: var(--iln-danger);
+  --color-ok: var(--iln-ok);
+  --color-warn: var(--iln-warn);
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+:root, [data-theme="dark-studio"] {
+  --iln-bg: #0f1115; --iln-bg-1: #15181e; --iln-bg-2: #1b1f27; --iln-bg-3: #252a34;
+  --iln-fg: #e6e8ee; --iln-fg-muted: #a0a6b4; --iln-fg-faint: #6b7280; --iln-line: #2a2f3a;
+  --iln-accent: #7c5cff; --iln-accent-fg: #ffffff; --iln-danger: #ef4444; --iln-ok: #22c55e; --iln-warn: #f59e0b;
+  --iln-canvas: #12141a; --iln-grid: rgba(255,255,255,0.06); --iln-grid-strong: rgba(255,255,255,0.12);
+  color-scheme: dark;
+}
+[data-theme="light-paper"] {
+  --iln-bg: #f7f5f0; --iln-bg-1: #ffffff; --iln-bg-2: #efece5; --iln-bg-3: #e4e0d6;
+  --iln-fg: #1f2328; --iln-fg-muted: #57606a; --iln-fg-faint: #8c959f; --iln-line: #d8d3c8;
+  --iln-accent: #5b4bdb; --iln-accent-fg: #ffffff; --iln-danger: #cf222e; --iln-ok: #1a7f37; --iln-warn: #9a6700;
+  --iln-canvas: #fbfaf7; --iln-grid: rgba(0,0,0,0.07); --iln-grid-strong: rgba(0,0,0,0.14);
+  color-scheme: light;
+}
+[data-theme="midnight-oled"] {
+  --iln-bg: #000000; --iln-bg-1: #050505; --iln-bg-2: #0d0d0d; --iln-bg-3: #1a1a1a;
+  --iln-fg: #f2f2f2; --iln-fg-muted: #9a9a9a; --iln-fg-faint: #5c5c5c; --iln-line: #1f1f1f;
+  --iln-accent: #00d1b2; --iln-accent-fg: #000000; --iln-danger: #ff453a; --iln-ok: #30d158; --iln-warn: #ffd60a;
+  --iln-canvas: #000000; --iln-grid: rgba(255,255,255,0.05); --iln-grid-strong: rgba(255,255,255,0.1);
+  color-scheme: dark;
+}
+[data-theme="sepia"] {
+  --iln-bg: #f1e7d0; --iln-bg-1: #f8f0dc; --iln-bg-2: #e9dcc0; --iln-bg-3: #dccdab;
+  --iln-fg: #433422; --iln-fg-muted: #6f5b43; --iln-fg-faint: #9b8566; --iln-line: #d2c09c;
+  --iln-accent: #b5562a; --iln-accent-fg: #fff8ec; --iln-danger: #b3261e; --iln-ok: #4d7c0f; --iln-warn: #a16207;
+  --iln-canvas: #f6edd8; --iln-grid: rgba(67,52,34,0.08); --iln-grid-strong: rgba(67,52,34,0.16);
+  color-scheme: light;
+}
+[data-theme="high-contrast"] {
+  --iln-bg: #000000; --iln-bg-1: #000000; --iln-bg-2: #0a0a0a; --iln-bg-3: #1c1c1c;
+  --iln-fg: #ffffff; --iln-fg-muted: #ffffff; --iln-fg-faint: #d0d0d0; --iln-line: #ffffff;
+  --iln-accent: #ffff00; --iln-accent-fg: #000000; --iln-danger: #ff4040; --iln-ok: #00ff66; --iln-warn: #ffbf00;
+  --iln-canvas: #000000; --iln-grid: rgba(255,255,255,0.2); --iln-grid-strong: rgba(255,255,255,0.4);
+  color-scheme: dark;
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0; background: var(--iln-bg); color: var(--iln-fg); font-family: var(--font-sans);
+  font-size: 13px; -webkit-font-smoothing: antialiased; overflow: hidden; overscroll-behavior: none;
+}
+* { scrollbar-width: thin; scrollbar-color: var(--iln-bg-3) transparent; }
+::selection { background: color-mix(in srgb, var(--iln-accent) 35%, transparent); }
+button { cursor: pointer; }
+button:disabled { cursor: default; opacity: .45; }
+:focus-visible { outline: 2px solid var(--iln-accent); outline-offset: 1px; }
