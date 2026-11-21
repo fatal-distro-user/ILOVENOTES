@@ -82,6 +82,8 @@ test('layer mask hides pixels and clipping mask restricts paint', async ({ page 
   // Add mask, paint black on it with the eraser to hide pixels.
   await page.getByTestId('layer-mask').click();
   await page.getByTestId('paint-tool-eraser').click();
+  await page.getByTestId('brush-preset-select').selectOption('eraser-hard');
+  await page.getByTestId('brush-size').fill('40');
   await stroke(page, cx - 40, cy, cx + 40, cy);
   await page.waitForTimeout(100);
   expect((await pixelAt(page, cx, cy))[0]).toBeGreaterThan(240);

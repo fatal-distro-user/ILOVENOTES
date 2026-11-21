@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Layers, Palette } from 'lucide-react';
+import { Layers, Palette, Brush } from 'lucide-react';
 import { registerTabView } from '@/views/registry';
 import { registerPanel } from '@/panels/registry';
 import { registerCommands } from '@/commands/registry';
@@ -19,6 +19,8 @@ import { PaintStudioView } from './studio/StudioView';
 import { LayersPanel } from './studio/LayersPanel';
 import { usePaintStudio } from './studio/store';
 import './studio/basicTools';
+import './brushes/tools';
+import { BrushStudioPanel } from './brushes/BrushStudio';
 
 export function openPaintStudio(docId: string, title = 'Painting', opts: { newTab?: boolean } = { newTab: true }): void {
   useTabs.getState().open({ kind: 'paint', title, params: { docId } }, opts);
@@ -26,6 +28,7 @@ export function openPaintStudio(docId: string, title = 'Painting', opts: { newTa
 
 registerTabView('paint', PaintStudioView);
 const isPaint = () => activeTab()?.kind === 'paint' || !!usePaintStudio.getState().doc;
+registerPanel({ id: 'brushes', title: 'Brushes', icon: Brush, defaultSide: 'right', component: BrushStudioPanel, when: isPaint, defaultOrder: 6 });
 registerPanel({ id: 'layers', title: 'Layers', icon: Layers, defaultSide: 'right', component: LayersPanel, when: isPaint, defaultOrder: 5 });
 
 /** Paint frame placed on the infinite canvas: shows the painting's preview; double-click opens the studio. */
