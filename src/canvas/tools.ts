@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 export type CanvasTool =
   | 'select' | 'hand' | 'pen' | 'highlighter' | 'eraser' | 'text' | 'rect' | 'ellipse' | 'diamond' | 'triangle'
-  | 'line' | 'arrow' | 'frame' | 'sticky' | 'connector' | 'laser';
+  | 'line' | 'arrow' | 'frame' | 'sticky' | 'connector' | 'laser' | 'paint' | 'mindmap' | 'audio';
 
 export type BackgroundKind = 'none' | 'grid' | 'dot' | 'isometric' | 'hex' | 'ruled' | 'staff' | 'cornell';
 
@@ -41,7 +41,7 @@ export const useCanvasTools = create<CanvasToolState>()(
 
 export const TOOL_SHORTCUTS: Record<string, CanvasTool> = {
   V: 'select', H: 'hand', P: 'pen', M: 'highlighter', E: 'eraser', T: 'text', R: 'rect', O: 'ellipse',
-  D: 'diamond', L: 'line', A: 'arrow', F: 'frame', N: 'sticky', C: 'connector', K: 'laser',
+  D: 'diamond', L: 'line', A: 'arrow', F: 'frame', N: 'sticky', C: 'connector', K: 'laser', B: 'paint',
 };
 
 export const PEN_COLORS = ['#e6e8ee', '#111827', '#ef4444', '#f97316', '#facc15', '#22c55e', '#06b6d4', '#3b82f6', '#7c5cff', '#ec4899'];

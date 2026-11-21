@@ -3,7 +3,7 @@ import { useNode } from '@/db/hooks';
 import { toggleStar } from '@/db/repo';
 import { registerPanel } from './registry';
 import { useStatus } from '@/store/status';
-import { useTabs } from '@/store/tabs';
+import { useTabs, activeTab } from '@/store/tabs';
 
 const fmt = (t: number) => (t ? new Date(t).toLocaleString() : '—');
 
@@ -51,4 +51,4 @@ function PageInfoPanel() {
   );
 }
 
-registerPanel({ id: 'page-info', title: 'Page Info', icon: Info, defaultSide: 'right', component: PageInfoPanel, defaultOrder: 90 });
+registerPanel({ id: 'page-info', title: 'Page Info', icon: Info, defaultSide: 'right', component: PageInfoPanel, defaultOrder: 90, when: () => activeTab()?.kind === 'page' });

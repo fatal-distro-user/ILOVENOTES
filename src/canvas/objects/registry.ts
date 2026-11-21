@@ -23,6 +23,8 @@ export interface ObjectTypeDef {
   minSize?: { w: number; h: number };
   /** Plain-text representation (search, export, OCR). */
   toText?: (obj: CanvasObject) => string;
+  /** Double-click action for non-text objects (e.g. open a paint frame in the studio). */
+  onOpen?: (obj: CanvasObject, doc: CanvasDoc) => void;
   /** SVG markup for vector export (in world coords). */
   toSvg?: (obj: CanvasObject) => string;
 }

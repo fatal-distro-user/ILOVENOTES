@@ -547,6 +547,7 @@ function CanvasSurface({ doc, active, compact }: { doc: CanvasDoc; active: boole
     if ((e.target as HTMLElement).closest('[data-canvas-ui]')) return;
     const w = worldPt(e);
     const hit = hitObject(w);
+    if (hit && objectType(hit.type)?.onOpen) { objectType(hit.type)!.onOpen!(hit, doc); return; }
     if (hit && objectType(hit.type)?.editable && !hit.locked) { doc.select([hit.id]); doc.store.setState({ editingId: hit.id }); return; }
     if (!hit && useCanvasTools.getState().tool === 'select') {
       // Double-click on empty canvas: create a text box.

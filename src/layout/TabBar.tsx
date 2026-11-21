@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, Calendar, Columns2, FileText, GraduationCap, LayoutTemplate, Network, Columns3, PanelTop, Pin, Rows2, Search, Settings, Trash2, X, type LucideIcon } from 'lucide-react';
+import { BookOpen, Calendar, Columns2, FileText, GraduationCap, LayoutTemplate, Network, Columns3, PanelTop, Palette, Pin, Rows2, Search, Settings, Trash2, X, type LucideIcon } from 'lucide-react';
 import clsx from 'clsx';
 import { useTabs, type Pane, type Tab, type TabKind } from '@/store/tabs';
 import { useNode } from '@/db/hooks';
@@ -10,7 +10,7 @@ export const TAB_MIME = 'application/x-iln-tab';
 
 const KIND_ICONS: Record<TabKind, LucideIcon> = {
   page: FileText, graph: Network, kanban: Columns3, calendar: Calendar, flashcards: GraduationCap,
-  trash: Trash2, settings: Settings, search: Search, templates: LayoutTemplate,
+  trash: Trash2, settings: Settings, search: Search, templates: LayoutTemplate, paint: Palette,
 };
 
 function TabIcon({ tab }: { tab: Tab }) {

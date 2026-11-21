@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { ListTree, Link2, Unlink } from 'lucide-react';
 import { db } from '@/db/schema';
 import { registerPanel } from '@/panels/registry';
-import { useTabs } from '@/store/tabs';
+import { useTabs, activeTab } from '@/store/tabs';
 import { useActiveEditor, useActivePageId } from './activeEditor';
 import { useEditorHeadings, scrollToPos } from './nodes/Toc';
 import { backlinksFor } from './links';
@@ -59,5 +59,5 @@ function BacklinksPanel() {
   );
 }
 
-registerPanel({ id: 'outline', title: 'Outline', icon: ListTree, defaultSide: 'right', component: OutlinePanel, defaultOrder: 10 });
-registerPanel({ id: 'backlinks', title: 'Backlinks', icon: Link2, defaultSide: 'right', component: BacklinksPanel, defaultOrder: 20 });
+registerPanel({ id: 'outline', title: 'Outline', icon: ListTree, defaultSide: 'right', component: OutlinePanel, defaultOrder: 10, when: () => activeTab()?.kind === 'page' });
+registerPanel({ id: 'backlinks', title: 'Backlinks', icon: Link2, defaultSide: 'right', component: BacklinksPanel, defaultOrder: 20, when: () => activeTab()?.kind === 'page' });

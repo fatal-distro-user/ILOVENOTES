@@ -8,6 +8,7 @@ import { registerObjectType, type ObjectViewProps } from '@/canvas/objects/regis
 import { registerCanvasPlugin } from '@/canvas/CanvasView';
 import { registerCommands } from '@/commands/registry';
 import { useActivePageId } from '@/editor/activeEditor';
+import { activeTab } from '@/store/tabs';
 import { toast } from '@/store/status';
 import { db } from '@/db/schema';
 import { activeScope } from '@/history/scopes';
@@ -52,7 +53,7 @@ function AnnotationsPanel() {
 }
 const EMPTY = createStore(() => ({ ready: true, items: {} as Record<string, Annotation>, selected: null as string | null }));
 
-registerPanel({ id: 'pdf-annotations', title: 'Annotations', icon: FileText, defaultSide: 'right', component: AnnotationsPanel, defaultOrder: 30 });
+registerPanel({ id: 'pdf-annotations', title: 'Annotations', icon: FileText, defaultSide: 'right', component: AnnotationsPanel, defaultOrder: 30, when: () => activeTab()?.kind === 'page' });
 
 /** A PDF page placed on the infinite canvas, rendered at a resolution matching the zoom. */
 function PdfPageObject({ obj, zoom }: ObjectViewProps) {

@@ -3,6 +3,7 @@ import * as pdfjs from 'pdfjs-dist';
 import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
 import { db } from '@/db/schema';
+import { encodeCanvas } from '@/lib/encode';
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
 export { pdfjs };
@@ -64,7 +65,7 @@ export function pageImageUrl(pdfId: string, pageIndex: number, scale: number): P
       const page = await doc.getPage(pageIndex + 1);
       const c = document.createElement('canvas');
       await renderPageToCanvas(page, c, bucket);
-      const blob = await new Promise<Blob>((res, rej) => c.toBlob((b) => (b ? res(b) : rej(new Error('Render failed'))), 'image/png'));
+      const blob = await encodeCanvas(c);
       return URL.createObjectURL(blob);
     })();
     bitmaps.set(key, p);

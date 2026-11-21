@@ -64,6 +64,11 @@ export interface Stroke {
 export interface RasterDoc {
   id: ID; pageId: ID; ownerId: ID; width: number; height: number; background: string;
   activeLayerId: ID | null; fps: number; createdAt: number; updatedAt: number;
+  name?: string;
+  /** flattened PNG preview used by canvas/document thumbnails */
+  preview?: Blob;
+  /** animation settings */
+  anim?: { enabled: boolean; mode: 'loop' | 'pingpong' | 'once'; onionPrev: number; onionNext: number; onionOpacity: number; prevTint: string; nextTint: string };
 }
 
 export type LayerKind = 'raster' | 'vector' | 'text' | 'adjustment' | 'group';

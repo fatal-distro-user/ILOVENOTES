@@ -4,7 +4,7 @@ import { immer } from 'zustand/middleware/immer';
 import { nanoid } from 'nanoid';
 
 /** Kinds of things a tab can show. Page tabs carry a pageId; others are app views. */
-export type TabKind = 'page' | 'graph' | 'kanban' | 'calendar' | 'flashcards' | 'trash' | 'settings' | 'search' | 'templates';
+export type TabKind = 'page' | 'graph' | 'kanban' | 'calendar' | 'flashcards' | 'trash' | 'settings' | 'search' | 'templates' | 'paint';
 
 export interface Tab { id: string; kind: TabKind; pageId?: string; title: string; pinned?: boolean; params?: Record<string, string> }
 export interface Pane { id: string; tabs: Tab[]; activeTabId: string | null; history: string[] }
