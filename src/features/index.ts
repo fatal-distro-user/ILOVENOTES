@@ -14,3 +14,4 @@ import '@/canvas/register';
 import '@/pdf/register';
 import '@/paint/register';
 import '@/paint/color/register';
+import '@/spatial/register';

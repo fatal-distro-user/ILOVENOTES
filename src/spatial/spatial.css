@@ -1,0 +1,20 @@
+.iln-sticky { border-radius: 4px; box-shadow: 0 6px 16px rgba(0,0,0,.22), 0 1px 2px rgba(0,0,0,.18); color: #1c1917; }
+.iln-sticky-md { font-size: 14px; line-height: 1.4; }
+.iln-sticky-md h1 { font-size: 1.35em; font-weight: 700; margin: 0 0 .2em; }
+.iln-sticky-md h2 { font-size: 1.15em; font-weight: 700; margin: 0 0 .2em; }
+.iln-sticky-md h3 { font-weight: 700; }
+.iln-sticky-md p { margin: 0 0 .25em; }
+.iln-sticky-md p.blank { height: .5em; }
+.iln-sticky-md p.placeholder { opacity: .45; font-style: italic; }
+.iln-sticky-md ul, .iln-sticky-md ol { padding-left: 1.2em; margin: 0 0 .25em; }
+.iln-sticky-md ul { list-style: disc; } .iln-sticky-md ol { list-style: decimal; }
+.iln-sticky-md ul.tasks { list-style: none; padding-left: .1em; }
+.iln-sticky-md code { font-family: var(--font-mono); background: rgba(0,0,0,.08); border-radius: 3px; padding: 0 .2em; font-size: .9em; }
+.iln-sticky-md mark { background: rgba(250, 204, 21, .6); }
+.iln-sticky-md a { color: #1d4ed8; text-decoration: underline; }
+.iln-sticky-md .sticky-wiki { color: #6d28d9; border-bottom: 1px dashed currentColor; }
+.iln-sticky-md blockquote { border-left: 3px solid rgba(0,0,0,.25); padding-left: .5em; opacity: .85; }
+.iln-mindnode { border: 2px solid var(--iln-accent); border-radius: 999px; background: var(--iln-bg-1); color: var(--iln-fg); font-weight: 500; box-shadow: 0 2px 8px rgba(0,0,0,.18); }
+.iln-mindnode[data-level="0"] { background: var(--iln-accent); color: var(--iln-accent-fg); font-weight: 700; font-size: 15px; }
+.iln-mindnode[data-level="1"] { font-weight: 600; }
+.iln-mindnode[data-level="3"] { border-width: 1px; font-size: 12px; }

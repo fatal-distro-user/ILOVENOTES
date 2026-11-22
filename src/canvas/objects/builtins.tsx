@@ -39,14 +39,14 @@ export function arrowHead(d: Record<string, unknown>, w: number, h: number, size
   return `M${x2 - L * Math.cos(a - 0.45)},${y2 - L * Math.sin(a - 0.45)} L${x2},${y2} L${x2 - L * Math.cos(a + 0.45)},${y2 - L * Math.sin(a + 0.45)}`;
 }
 
-function EditableText({ obj, doc, editing, style, className }: { obj: CanvasObject; doc: ObjectViewProps['doc']; editing: boolean; style?: React.CSSProperties; className?: string }) {
+export function EditableText({ obj, doc, editing, style, className }: { obj: CanvasObject; doc: ObjectViewProps['doc']; editing: boolean; style?: React.CSSProperties; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const text = str(obj.data.text);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     if (editing) {
-      el.focus();
+      el.focus({ preventScroll: true });
       const range = document.createRange();
       range.selectNodeContents(el);
       const sel = window.getSelection();

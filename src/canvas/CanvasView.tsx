@@ -754,6 +754,7 @@ function CanvasSurface({ doc, active, compact }: { doc: CanvasDoc; active: boole
     <div ref={containerRef} tabIndex={0} data-testid="canvas" className={clsx('relative h-full w-full overflow-hidden outline-none select-none', compact && 'rounded')}
       style={{ background: settings.bgColor ?? 'var(--iln-canvas)', cursor, touchAction: 'none' }}
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={(e) => void onPointerUp(e)} onPointerCancel={(e) => void onPointerUp(e)}
+      onScroll={(e) => { e.currentTarget.scrollTop = 0; e.currentTarget.scrollLeft = 0; }}
       onDoubleClick={onDoubleClick} onKeyDown={onKeyDown} onKeyUp={onKeyUp} onContextMenu={(e) => e.preventDefault()}
       onDragOver={(e) => { if (Array.from(e.dataTransfer.items).some((i) => i.kind === 'file')) e.preventDefault(); }} onDrop={onDrop}>
       <canvas ref={bgRef} className="pointer-events-none absolute inset-0 h-full w-full" />

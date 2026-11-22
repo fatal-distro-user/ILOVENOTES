@@ -208,7 +208,12 @@ export class CanvasDoc {
 
   clearSelection(): void { this.store.setState({ selection: [], strokeSelection: [], editingId: null }); }
 
-  objectBounds(o: CanvasObject): Rect { return rotatedBounds({ x: o.x, y: o.y, w: o.w, h: o.h }, o.rotation); }
+  /** Types whose bounds derive from other objects (connectors) register a resolver. */
+  static boundsResolvers = new Map<string, (o: CanvasObject, doc: CanvasDoc) => Rect>();
+  objectBounds(o: CanvasObject): Rect {
+    const r = CanvasDoc.boundsResolvers.get(o.type);
+    return r ? r(o, this) : rotatedBounds({ x: o.x, y: o.y, w: o.w, h: o.h }, o.rotation);
+  }
 
   selectionBounds(): Rect | null {
     const s = this.state;

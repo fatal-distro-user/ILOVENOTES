@@ -76,7 +76,7 @@ export function CanvasToolbar({ doc, compact, onInsertImages }: { doc: CanvasDoc
   const all = [...TOOLS, ...extraTools];
   const showStyle = ['pen', 'highlighter', 'eraser', 'rect', 'ellipse', 'diamond', 'triangle', 'line', 'arrow'].includes(t.tool);
   return (
-    <div data-canvas-ui className={clsx('absolute top-1/2 left-2 z-20 flex -translate-y-1/2 flex-col gap-0.5 rounded-lg border border-line bg-bg-1/95 p-1 shadow-xl backdrop-blur', compact && 'scale-90')} data-testid="canvas-toolbar">
+    <div data-canvas-ui className={clsx('absolute top-1/2 left-2 z-20 flex max-h-[calc(100%-16px)] -translate-y-1/2 flex-col gap-0.5 overflow-y-auto rounded-lg border border-line bg-bg-1/95 p-1 shadow-xl backdrop-blur [scrollbar-width:none]', compact && 'scale-90')} data-testid="canvas-toolbar">
       {all.map((d) => (
         <ToolBtn key={d.tool} active={t.tool === d.tool} title={`${d.label}${d.key ? ` (${d.key})` : ''}`} onClick={() => t.setTool(d.tool)} testId={`tool-${d.tool}`}><d.icon size={16} /></ToolBtn>
       ))}
