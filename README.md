@@ -289,4 +289,4 @@ scripts/       Build scripts
 
 ## License
 
-No license specified yet. (`package.json` declares `"license": "MIT"`, but there is no `LICENSE` file in the repository.)
+ILOVENOTES is open source under the [MIT License](LICENSE).
