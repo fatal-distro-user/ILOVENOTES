@@ -4,6 +4,10 @@ ILOVENOTES is a local-first hybrid app that combines structured notes, an infini
 
 Stack: React 19, TypeScript (strict), Vite, Tailwind v4, Zustand + immer, Dexie (IndexedDB), TipTap v3, `vite-plugin-pwa`, and Electron with electron-builder.
 
+## Documentation
+
+User and developer documentation lives in [`docs/`](docs/README.md): installation, getting started, the notes editor, canvas, PDF, paint studio, animation, knowledge tools, import and export, development and an FAQ.
+
 ## Feature matrix
 
 | Area | Feature | Notes |
@@ -174,6 +178,21 @@ Blur, sharpen, polygonal lasso and the guides tool have no key.
 Kanban, calendar, flashcards, template library, time-lapse and filters are reachable through the command palette (`Mod+K`) and have no dedicated shortcut.
 
 ## Getting started
+
+### Download
+
+Prebuilt apps are on the [GitHub Releases page](https://github.com/fatal-distro-user/ILOVENOTES/releases). Pick the file for your system:
+
+| OS | File |
+| --- | --- |
+| Linux | `ILOVENOTES-<ver>.AppImage` (portable) or `ilovenotes_<ver>_amd64.deb` (Debian / Ubuntu) |
+| Windows | `ILOVENOTES Setup <ver>.exe` |
+| macOS | the `.dmg` for your CPU (Intel or Apple silicon) |
+| Any browser | `ILOVENOTES-web.zip` (static PWA build to host yourself) |
+
+Desktop builds are unsigned, so expect a first-launch warning. See [docs/installation.md](docs/installation.md) for the steps per OS.
+
+### Build from source
 
 Requirements: Node.js 22 or newer (CI uses Node 22).
 
