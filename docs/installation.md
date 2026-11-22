@@ -10,8 +10,9 @@ All desktop builds are **unsigned**, so your OS will warn you on first launch. T
 | --- | --- | --- |
 | Linux (any distro) | `ILOVENOTES-<ver>.AppImage` | Portable, no install |
 | Debian / Ubuntu and derivatives | `ilovenotes_<ver>_amd64.deb` | Installs through your package manager (64-bit x86) |
-| Windows | `ILOVENOTES Setup <ver>.exe` | NSIS installer |
-| macOS | `.dmg` (one per CPU architecture) | Unsigned and not notarized |
+| Windows | `ILOVENOTES.Setup.<ver>.exe` | NSIS installer |
+| macOS (Apple silicon) | `ILOVENOTES-<ver>-arm64.dmg` | Unsigned and not notarized |
+| macOS (Intel) | `ILOVENOTES-<ver>.dmg` | Unsigned and not notarized |
 | Any browser | `ILOVENOTES-web.zip` | Static PWA build you host yourself |
 
 ## Linux: AppImage
@@ -37,7 +38,7 @@ The package declares its runtime dependencies (GTK 3, NSS and a few others), and
 
 ## Windows
 
-1. Run `ILOVENOTES Setup <ver>.exe`.
+1. Run `ILOVENOTES.Setup.<ver>.exe`.
 2. Because the installer is unsigned, Windows SmartScreen may show "Windows protected your PC". Choose **More info**, then **Run anyway**.
 3. The installer lets you choose the install directory and installs per user (not for all users).
 
@@ -46,7 +47,7 @@ The package declares its runtime dependencies (GTK 3, NSS and a few others), and
 1. Open the `.dmg` and drag ILOVENOTES to Applications.
 2. The app is unsigned and not notarized, so Gatekeeper blocks the first launch. Either right-click the app and choose **Open**, then confirm, or open **System Settings, Privacy & Security** and choose **Open Anyway** after the first blocked attempt.
 
-The macOS builds are produced on GitHub's `macos-latest` runner with both `--x64` and `--arm64`, so a release should contain one `.dmg` for Intel Macs and one for Apple silicon. electron-builder's default naming normally distinguishes them with an architecture suffix (an `-arm64` name for Apple silicon), but the exact file names are not pinned in this repository, so check the asset list on the release page. If you are unsure which Mac you have, choose Apple menu, About This Mac: "Apple M..." means Apple silicon, "Intel" means Intel.
+Pick `ILOVENOTES-<ver>-arm64.dmg` for Apple silicon (M-series) Macs and `ILOVENOTES-<ver>.dmg` for Intel Macs. If you are unsure which Mac you have, choose Apple menu, About This Mac: "Apple M..." means Apple silicon, "Intel" means Intel.
 
 ## Web build (PWA)
 

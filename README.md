@@ -186,8 +186,8 @@ Prebuilt apps are on the [GitHub Releases page](https://github.com/fatal-distro-
 | OS | File |
 | --- | --- |
 | Linux | `ILOVENOTES-<ver>.AppImage` (portable) or `ilovenotes_<ver>_amd64.deb` (Debian / Ubuntu) |
-| Windows | `ILOVENOTES Setup <ver>.exe` |
-| macOS | the `.dmg` for your CPU (Intel or Apple silicon) |
+| Windows | `ILOVENOTES.Setup.<ver>.exe` |
+| macOS | `ILOVENOTES-<ver>-arm64.dmg` (Apple silicon) or `ILOVENOTES-<ver>.dmg` (Intel) |
 | Any browser | `ILOVENOTES-web.zip` (static PWA build to host yourself) |
 
 Desktop builds are unsigned, so expect a first-launch warning. See [docs/installation.md](docs/installation.md) for the steps per OS.
