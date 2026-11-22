@@ -100,12 +100,18 @@ function isEditable(t: EventTarget | null): boolean {
   return t.isContentEditable || t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT';
 }
 
-/** Install the global keydown dispatcher. Returns an uninstaller. */
+/**
+ * Install the global keydown dispatcher. Returns an uninstaller.
+ * - Bubble phase: normal shortcuts (views like the canvas can claim keys first via preventDefault).
+ * - Capture phase: app-level shortcuts flagged `allowInInput` while focus is in an editable field, so rich
+ *   editors (ProseMirror) can't swallow them.
+ */
 export function installShortcutDispatcher(target: Window = window): () => void {
-  const handler = (e: KeyboardEvent) => {
+  const dispatch = (e: KeyboardEvent, onlyAllowInInput: boolean) => {
     if (e.defaultPrevented) return;
     const combo = eventToShortcut(e);
     const inInput = isEditable(e.target);
+    if (onlyAllowInInput && !inInput) return;
     for (const c of commands.values()) {
       if (!c.shortcut) continue;
       const list = Array.isArray(c.shortcut) ? c.shortcut : [c.shortcut];
@@ -118,6 +124,9 @@ export function installShortcutDispatcher(target: Window = window): () => void {
       return;
     }
   };
-  target.addEventListener('keydown', handler);
-  return () => target.removeEventListener('keydown', handler);
+  const capture = (e: KeyboardEvent) => dispatch(e, true);
+  const bubble = (e: KeyboardEvent) => dispatch(e, false);
+  target.addEventListener('keydown', capture, true);
+  target.addEventListener('keydown', bubble);
+  return () => { target.removeEventListener('keydown', capture, true); target.removeEventListener('keydown', bubble); };
 }

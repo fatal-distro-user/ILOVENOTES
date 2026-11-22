@@ -48,7 +48,8 @@ export function buildExtensions(ctx: ExtensionContext): AnyExtension[] {
     Highlight.configure({ multicolor: true }),
     Subscript, Superscript,
     Image.configure({ allowBase64: true, inline: false }),
-    Typography,
+    // Superscript/fraction rewrites would corrupt LaTeX typed inline ($x^2$, 1/2).
+    Typography.configure({ superscriptTwo: false, superscriptThree: false, oneHalf: false, oneQuarter: false, threeQuarters: false }),
     CodeBlock,
     Callout,
     Toggle, ToggleSummary, ToggleContent,

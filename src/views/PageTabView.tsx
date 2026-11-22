@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FileText, ImagePlus, LayoutGrid, PenTool, Shapes, Star, Trash2, Undo2, X } from 'lucide-react';
+import { Download, FileText, ImagePlus, LayoutGrid, PenTool, Shapes, Star, Trash2, Undo2, X } from 'lucide-react';
 import clsx from 'clsx';
 import { useAncestors, useNode, useNotebooks } from '@/db/hooks';
 import * as repo from '@/db/repo';
@@ -13,6 +13,7 @@ import { Segmented } from '@/ui/Segmented';
 import { IconButton } from '@/ui/IconButton';
 import { Button } from '@/ui/Modal';
 import { registerTabView, getPageBody, type TabViewProps } from './registry';
+import { runCommand } from '@/commands/registry';
 
 const COVERS = [
   'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -136,6 +137,7 @@ function PageTabView({ tab, paneId, active }: TabViewProps) {
           <Breadcrumb pageId={node.id} notebookId={node.notebookId} paneId={paneId} />
           <div className="flex shrink-0 items-center gap-1">
             {!node.cover && <Button className="h-6 px-2 text-[12px]" onClick={(e) => setCoverAnchor(e.currentTarget)} data-testid="cover-add"><ImagePlus size={13} />Add cover</Button>}
+            <IconButton title="Export…" shortcut="Mod+Shift+E" onClick={() => void runCommand('export.open')} data-testid="page-export"><Download size={14} /></IconButton>
             <IconButton title={node.starred ? 'Unstar' : 'Star'} active={!!node.starred} onClick={() => void repo.toggleStar(node.id)} data-testid="page-star"><Star size={14} className={node.starred ? 'fill-warn text-warn' : ''} /></IconButton>
           </div>
         </div>

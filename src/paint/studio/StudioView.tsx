@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { Download, Maximize2, Ruler } from 'lucide-react';
 import type { TabViewProps } from '@/views/registry';
 import { useTabs } from '@/store/tabs';
+import { runCommand } from '@/commands/registry';
 import { toast } from '@/store/status';
 import { saveFile } from '@/platform/fileio';
 import { encodeCanvas } from '@/lib/encode';
@@ -77,6 +78,7 @@ function Studio({ doc, active, tabId }: { doc: PaintDocument; active: boolean; t
         <button className="flex h-7 items-center gap-1 rounded px-2 text-fg-muted hover:bg-bg-3" onClick={() => fit?.()} title="Fit to view (Mod+0)"><Maximize2 size={13} /></button>
         <button className="flex h-7 items-center gap-1 rounded px-2 text-fg-muted hover:bg-bg-3" onClick={() => setResizeOpen(true)} title="Canvas size" data-testid="paint-resize"><Ruler size={13} />{doc.width}×{doc.height}</button>
         <button className="flex h-7 items-center gap-1 rounded px-2 text-fg-muted hover:bg-bg-3" onClick={() => void exportPng()} title="Export PNG" data-testid="paint-export-png"><Download size={13} />PNG</button>
+        <button className="flex h-7 items-center gap-1 rounded px-2 text-fg-muted hover:bg-bg-3" onClick={() => void runCommand('export.open')} title="Export ORA / PSD / layers (Mod+Shift+E)" data-testid="paint-export"><Download size={13} />Export…</button>
       </div>
       <div className="flex min-h-0 flex-1">
         <div className="flex w-11 shrink-0 flex-col items-center gap-0.5 overflow-y-auto border-r border-line bg-bg-1 py-1" data-testid="paint-toolbar">
