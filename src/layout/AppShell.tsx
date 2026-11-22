@@ -14,7 +14,8 @@ import { StatusBar, PomodoroTicker } from './StatusBar';
 import { Scratchpad } from './Scratchpad';
 import { ZenPill } from './ZenPill';
 import { getBottomBar } from './bottomBars';
-import { openSearch, openSettings } from './actions';
+import { openSettings } from './actions';
+import { usePalette } from '@/features/pkm/Palette';
 
 function TitleBar() {
   const leftOpen = useLayout((s) => s.leftOpen);
@@ -28,7 +29,7 @@ function TitleBar() {
         </div>
       </div>
       <div className="flex items-center gap-1">
-        <IconButton title="Search" onClick={() => openSearch()} data-testid="open-search"><Search size={15} /></IconButton>
+        <IconButton title="Search" shortcut="Mod+K" onClick={() => usePalette.getState().show()} data-testid="open-search"><Search size={15} /></IconButton>
         <IconButton title="Settings" shortcut="Mod+," onClick={openSettings} data-testid="open-settings"><Settings size={15} /></IconButton>
         <IconButton title="Toggle right dock" shortcut="Mod+Alt+\" active={rightOpen} onClick={() => useLayout.getState().toggleRight()} data-testid="toggle-right"><PanelRight size={15} /></IconButton>
       </div>
